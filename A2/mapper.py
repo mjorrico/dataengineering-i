@@ -13,8 +13,7 @@ for raw_json in fileinput.input():
         continue
     
     raw_json = json.loads(raw_json)
-    if "retweeted_status" in raw_json.keys(): # if retweet, skip to the next one
-        continue
+    if "retweeted_status" in raw_json.keys(): continue #  if retweet, skip to the next one
 
     line = raw_json["text"]
     line = line.strip()
@@ -23,8 +22,9 @@ for raw_json in fileinput.input():
     line = line.lower()
     words = line.split()
 
+    # will count 1 if certain pronoun appears multiple times in a single tweet
     for p in PRONOUNS:
         if p in words:
             print(f"{p} 1")
 
-# ~/hadoop*/bin/hadoop jar ~/hadoop*/share/hadoop/tools/lib/hadoop*streaming*jar -files ~/hadoop_streaming/ -mapper "/usr/bin/python3 mapper.py" -reducer "/usr/bin/python3 reducer.py" -input /user/ubuntu/tweets_data/head.txt -output /user/ubuntu/non_retweets_output
+# ~/hadoop*/bin/hadoop jar ~/hadoop*/share/hadoop/tools/lib/hadoop*streaming*jar -files ~/hadoop_streaming/ -mapper mapper.py -reducer reducer.py -input /user/ubuntu/tweets_input -output /user/ubuntu/tweets_output_noretweet
