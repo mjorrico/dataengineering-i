@@ -1,0 +1,35 @@
+# SPARK network diagram https://www.icbm.com/docs/en/zpfas/1.1.0?topic=spark-configuring-networking-apache
+
+version: '3.9'
+services:
+  spark-master:
+    image: spark-master:v1
+    build:
+      context: .
+      target: spark-master
+    hostname: sparkmaster # This marks this container's local-ip as sparkmaster. Check /etc/hosts to confirm
+    ports:
+      - "7077:7077" # So we can call master from driver
+      - "8080:8080" # Master web GUI
+      - "9870:9870" # HDFS datanode web GUI for later
+    networks:
+      - spark-network
+
+  spark-worker-1:
+    image: spark-worker:v1
+    build:
+      context: .
+      target: spark-worker
+    networks:
+      - spark-network
+
+  spark-worker-2:
+    image: spark-worker:v1
+    build:
+      context: .
+      target: spark-worker
+    networks:
+      - spark-network
+
+networks:
+  spark-network: {}
