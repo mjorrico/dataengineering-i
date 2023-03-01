@@ -1,17 +1,9 @@
-FROM ubuntu:22.04 AS spark-base
+FROM ubuntu:22.04
 RUN apt-get update
 RUN apt-get -y upgrade
 RUN apt install -y openjdk-8-jre-headless scala wget screen python3 python3-pip
 RUN pip3 install pyspark==3.3.2
 RUN wget https://archive.apache.org/dist/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz
 RUN tar -xvf spark-3.3.2-bin-hadoop3.tgz
+RUN rm -rf spark-3.3.2-bin-hadoop3.tgz
 RUN mv spark-3.3.2-bin-hadoop3/ /usr/local/spark
-ENV PATH="${PATH}:$SPARK_HOME/bin"
-ENV SPARK_HOME="/usr/local/spark"
-ENV SPARK_NO_DAEMONIZE="true"
-
-FROM spark-base AS spark-master
-CMD $SPARK_HOME/sbin/start-master.sh
-
-FROM spark-base AS spark-worker
-CMD $SPARK_HOME/sbin/start-worker.sh spark://sparkmaster:7077
